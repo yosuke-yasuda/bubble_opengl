@@ -282,6 +282,7 @@
 				5F5265121AD2527C004DC4C8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
