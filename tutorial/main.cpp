@@ -47,7 +47,7 @@
 static dWorldID world;
 static dSpaceID space;
 
-static dBodyID sphbody;
+static dBodyID sphbody[4];
 static dGeomID sphgeom;
 
 static dJointGroupID contactgroup;
@@ -119,10 +119,12 @@ static void reset_ball(void)
     
     dQuaternion q;
     dQSetIdentity(q);
-    dBodySetPosition (sphbody, sx, sy, sz);
-    dBodySetQuaternion(sphbody, q);
-    dBodySetLinearVel (sphbody, 0,0,0);
-    dBodySetAngularVel (sphbody, 0,0,0);
+    for(int i=0;i<sizeof(sphbody);i++){
+        dBodySetPosition (sphbody[i], sx, sy, sz+1.0f*(i));
+        dBodySetQuaternion(sphbody[i], q);
+        dBodySetLinearVel (sphbody[i], 0,0,0);
+        dBodySetAngularVel (sphbody[i], 0,0,0);
+     }
 }
 
 
@@ -133,6 +135,9 @@ static void command (int cmd)
     switch (cmd)
     {
         case ' ':
+            reset_ball();
+            break;
+        case 'a':
             reset_ball();
             break;
     }
@@ -157,16 +162,30 @@ static void simLoop (int pause)
     }
     
     dsSetColor (1,1,1);
-    const dReal *SPos = dBodyGetPosition(sphbody);
-    const dReal *SRot = dBodyGetRotation(sphbody);
-    float spos[3] = {static_cast<float>(SPos[0]), static_cast<float>(SPos[1]), static_cast<float>(SPos[2])};
-    float srot[12] = { static_cast<float>(SRot[0]), static_cast<float>(SRot[1]), static_cast<float>(SRot[2]), static_cast<float>(SRot[3]), static_cast<float>(SRot[4]), static_cast<float>(SRot[5]), static_cast<float>(SRot[6]), static_cast<float>(SRot[7]), static_cast<float>(SRot[8]), static_cast<float>(SRot[9]), static_cast<float>(SRot[10]), static_cast<float>(SRot[11]) };
-    dsDrawSphere
-    (
-     spos,
-     srot,
-     RADIUS
-     );
+    const dReal *SPos[] = {dBodyGetPosition(sphbody[0]), dBodyGetPosition(sphbody[1]), dBodyGetPosition(sphbody[2]), dBodyGetPosition(sphbody[3])};
+    const dReal *SRot[] = {dBodyGetRotation(sphbody[0]), dBodyGetRotation(sphbody[1]), dBodyGetRotation(sphbody[2]), dBodyGetRotation(sphbody[3])};
+    float spos[][3] = {
+        {static_cast<float>(SPos[0][0]), static_cast<float>(SPos[0][1]), static_cast<float>(SPos[0][2])},
+        {static_cast<float>(SPos[1][0]), static_cast<float>(SPos[1][1]), static_cast<float>(SPos[1][2])},
+        {static_cast<float>(SPos[2][0]), static_cast<float>(SPos[2][1]), static_cast<float>(SPos[2][2])},
+        {static_cast<float>(SPos[3][0]), static_cast<float>(SPos[3][1]), static_cast<float>(SPos[3][2])}
+    };
+    float srot[][12] = {
+        { static_cast<float>(SRot[0][0]), static_cast<float>(SRot[0][1]), static_cast<float>(SRot[0][2]), static_cast<float>(SRot[0][3]), static_cast<float>(SRot[0][4]), static_cast<float>(SRot[0][5]), static_cast<float>(SRot[0][6]), static_cast<float>(SRot[0][7]), static_cast<float>(SRot[0][8]), static_cast<float>(SRot[0][9]), static_cast<float>(SRot[0][10]), static_cast<float>(SRot[0][11]) },
+        { static_cast<float>(SRot[1][0]), static_cast<float>(SRot[1][1]), static_cast<float>(SRot[1][2]), static_cast<float>(SRot[1][3]), static_cast<float>(SRot[1][4]), static_cast<float>(SRot[1][5]), static_cast<float>(SRot[1][6]), static_cast<float>(SRot[1][7]), static_cast<float>(SRot[1][8]), static_cast<float>(SRot[1][9]), static_cast<float>(SRot[1][10]), static_cast<float>(SRot[1][11]) },
+        { static_cast<float>(SRot[2][0]), static_cast<float>(SRot[2][1]), static_cast<float>(SRot[2][2]), static_cast<float>(SRot[2][3]), static_cast<float>(SRot[2][4]), static_cast<float>(SRot[2][5]), static_cast<float>(SRot[2][6]), static_cast<float>(SRot[2][7]), static_cast<float>(SRot[2][8]), static_cast<float>(SRot[2][9]), static_cast<float>(SRot[2][10]), static_cast<float>(SRot[2][11]) },
+        { static_cast<float>(SRot[3][0]), static_cast<float>(SRot[3][1]), static_cast<float>(SRot[3][2]), static_cast<float>(SRot[3][3]), static_cast<float>(SRot[3][4]), static_cast<float>(SRot[3][5]), static_cast<float>(SRot[3][6]), static_cast<float>(SRot[3][7]), static_cast<float>(SRot[3][8]), static_cast<float>(SRot[3][9]), static_cast<float>(SRot[3][10]), static_cast<float>(SRot[3][11]) }
+        
+    };
+    
+    for(int i=0; i<sizeof(sphbody); i++){
+        dsDrawSphere
+        (
+         spos[i],
+         srot[i],
+         RADIUS
+         );
+    }
     
     // draw world trimesh
     dsSetColor(0.4,0.7,0.9);
@@ -245,14 +264,15 @@ int main (int argc, char **argv)
     //dIASSERT(dVALIDMAT3(R));
     
     dGeomSetRotation (world_mesh, R);
-    
     //float sx=0.0, sy=3.40, sz=6.80;
     (void)world_normals; // get rid of compiler warning
-    sphbody = dBodyCreate (world);
-    dMassSetSphere (&m,1,RADIUS);
-    dBodySetMass (sphbody,&m);
     sphgeom = dCreateSphere(0, RADIUS);
-    dGeomSetBody (sphgeom,sphbody);
+    dMassSetSphere (&m,1,RADIUS);
+    for (int i=0; i<sizeof(sphbody); i++){
+        sphbody[i] = dBodyCreate (world);
+        dBodySetMass (sphbody[i],&m);
+        dGeomSetBody (sphgeom,sphbody[i]);
+    }
     reset_ball();
     dSpaceAdd (space, sphgeom);
     
