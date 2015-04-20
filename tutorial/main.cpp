@@ -54,28 +54,17 @@ GLdouble normal[][3] = {
     { 0.0, 1.0, 0.0 }
 };
 
-void idle(void)
-{
-    glutPostRedisplay();
-}
+GLfloat light0pos[] = { 0.0, 3.0, 5.0, 1.0 };
+GLfloat light1pos[] = { 5.0, 3.0, 0.0, 1.0 };
 
-void display(void)
+GLfloat red[] = { 0.8, 0.2, 0.2, 1.0 };
+GLfloat green[] = { 0.0, 1.0, 0.0, 1.0 };
+
+void cube(void)
 {
     int i;
     int j;
-    static int r = 0; /* 回転角 */
     
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
-    glLoadIdentity();
-    
-    /* 視点位置と視線方向 */
-    gluLookAt(3.0, 4.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-    
-    /* 図形の回転 */
-    glRotated((double)r, 0.0, 1.0, 0.0);
-    
-    /* 図形の描画 */
     glBegin(GL_QUADS);
     for (j = 0; j < 6; ++j) {
         glNormal3dv(normal[j]);
@@ -84,6 +73,44 @@ void display(void)
         }
     }
     glEnd();
+}
+
+void idle(void)
+{
+    glutPostRedisplay();
+}
+
+void display(void)
+{
+    static int r = 0; /* 回転角 */
+    
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
+    /* 光源の位置設定 */
+    glLightfv(GL_LIGHT0, GL_POSITION, light0pos);
+    glLightfv(GL_LIGHT1, GL_POSITION, light1pos);
+    
+    /* モデルビュー変換行列の保存 */
+    glPushMatrix();
+    
+    /* 図形の回転 */
+    glRotated((double)r, 0.0, 1.0, 0.0);
+    
+    /* 図形の色 (赤)  */
+    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red);
+    
+    /* 図形の描画 */
+    cube();
+    
+    /* 二つ目の図形の描画 */
+    glPushMatrix();
+    glTranslated(1.0, 1.0, 1.0);
+    glRotated((double)(2 * r), 0.0, 1.0, 0.0);
+    cube();
+    glPopMatrix();
+    
+    /* モデルビュー変換行列の復帰 */
+    glPopMatrix();
     
     glutSwapBuffers();
     
@@ -102,6 +129,8 @@ void resize(int w, int h)
     
     /* モデルビュー変換行列の設定 */
     glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    gluLookAt(3.0, 4.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 }
 
 void mouse(int button, int state, int x, int y)
@@ -151,6 +180,9 @@ void init(void)
     
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
+    glEnable(GL_LIGHT1);
+    glLightfv(GL_LIGHT1, GL_DIFFUSE, green);
+    glLightfv(GL_LIGHT1, GL_SPECULAR, green);
 }
 
 int main(int argc, char *argv[])
