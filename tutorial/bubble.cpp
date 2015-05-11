@@ -7,3 +7,5 @@
 //
 
 #include "bubble.h"
+#include "<GLUT.h">
+

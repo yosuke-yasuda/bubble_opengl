@@ -12,6 +12,7 @@
 		5F5265171AD252BF004DC4C8 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F5265141AD252BF004DC4C8 /* GLUT.framework */; };
 		5F5265181AD252BF004DC4C8 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F5265151AD252BF004DC4C8 /* OpenGL.framework */; };
 		5F52651A1AD252DB004DC4C8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F5265191AD252DB004DC4C8 /* Foundation.framework */; };
+		5FD0A5301B0085C8003E8396 /* bubble.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FD0A52E1B0085C8003E8396 /* bubble.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -33,6 +34,8 @@
 		5F5265141AD252BF004DC4C8 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
 		5F5265151AD252BF004DC4C8 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		5F5265191AD252DB004DC4C8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		5FD0A52E1B0085C8003E8396 /* bubble.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bubble.cpp; sourceTree = "<group>"; };
+		5FD0A52F1B0085C8003E8396 /* bubble.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bubble.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +77,8 @@
 			isa = PBXGroup;
 			children = (
 				5F52650C1AD2527C004DC4C8 /* main.cpp */,
+				5FD0A52E1B0085C8003E8396 /* bubble.cpp */,
+				5FD0A52F1B0085C8003E8396 /* bubble.h */,
 			);
 			path = tutorial;
 			sourceTree = "<group>";
@@ -135,6 +140,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5F52650D1AD2527C004DC4C8 /* main.cpp in Sources */,
+				5FD0A5301B0085C8003E8396 /* bubble.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -282,6 +288,7 @@
 				5F5265121AD2527C004DC4C8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
