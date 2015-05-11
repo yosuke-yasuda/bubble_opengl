@@ -75,6 +75,14 @@ void cube(void)
     glEnd();
 }
 
+void sphere(void)
+{
+    int i;
+    int j;
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, green);
+    glutSolidSphere(0.1,16,16);
+}
+
 void idle(void)
 {
     glutPostRedisplay();
@@ -83,6 +91,8 @@ void idle(void)
 void display(void)
 {
     static int r = 0; /* 回転角 */
+    static float y = 0.0f;
+    static int sphere_length = 4;
     
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
@@ -101,12 +111,17 @@ void display(void)
     
     /* 図形の描画 */
     cube();
+    for (int i=0; i<sphere_length; i++) {
+        glTranslated(0.0, y-0.1*i, 0.0);
+        sphere();
+    }
     
     /* 二つ目の図形の描画 */
     glPushMatrix();
     glTranslated(1.0, 1.0, 1.0);
     glRotated((double)(2 * r), 0.0, 1.0, 0.0);
     cube();
+    y+=0.01;
     glPopMatrix();
     
     /* モデルビュー変換行列の復帰 */
