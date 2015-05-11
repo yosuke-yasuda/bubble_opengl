@@ -48,7 +48,7 @@ static dWorldID world;
 static dSpaceID space;
 
 static dBodyID sphbody[4];
-static dGeomID sphgeom;
+static dGeomID sphgeom[4];
 
 static dJointGroupID contactgroup;
 static dGeomID world_mesh;
@@ -266,22 +266,23 @@ int main (int argc, char **argv)
     dGeomSetRotation (world_mesh, R);
     //float sx=0.0, sy=3.40, sz=6.80;
     (void)world_normals; // get rid of compiler warning
-    sphgeom = dCreateSphere(0, RADIUS);
-    dMassSetSphere (&m,1,RADIUS);
     for (int i=0; i<sizeof(sphbody); i++){
+        sphgeom[i] = dCreateSphere(0, RADIUS);
         sphbody[i] = dBodyCreate (world);
+        dMassSetSphere (&m,1,RADIUS);
         dBodySetMass (sphbody[i],&m);
-        dGeomSetBody (sphgeom,sphbody[i]);
+        dGeomSetBody (sphgeom[i],sphbody[i]);
+        dSpaceAdd (space, sphgeom[i]);
     }
     reset_ball();
-    dSpaceAdd (space, sphgeom);
-    
     // run simulation
     dsSimulationLoop (argc,argv,352,288,&fn);
     
     // Causes segm violation? Why?
     // (because dWorldDestroy() destroys body connected to geom; must call first!)
-    dGeomDestroy(sphgeom);
+    for (int i=0; i<sizeof(sphbody); i++){
+        dGeomDestroy(sphgeom[i]);
+    }
     dGeomDestroy (world_mesh);
     
     dJointGroupEmpty (contactgroup);
@@ -291,6 +292,3 @@ int main (int argc, char **argv)
     dCloseODE();
     return 0;
 }
-
-
-
