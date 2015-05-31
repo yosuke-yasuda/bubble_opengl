@@ -1,87 +1,15 @@
-#include <GLUT/glut.h>
-#include <stdlib.h>
-
-GLdouble vertex[][3] = {
-    { 0.0, 0.0, 0.0 }, /* A */
-    { 1.0, 0.0, 0.0 }, /* B */
-    { 1.0, 1.0, 0.0 }, /* C */
-    { 0.0, 1.0, 0.0 }, /* D */
-    { 0.0, 0.0, 1.0 }, /* E */
-    { 1.0, 0.0, 1.0 }, /* F */
-    { 1.0, 1.0, 1.0 }, /* G */
-    { 0.0, 1.0, 1.0 }  /* H */
-};
-
-int edge[][2] = {
-    { 0, 1 }, /* ア (A-B) */
-    { 1, 2 }, /* イ (B-C) */
-    { 2, 3 }, /* ウ (C-D) */
-    { 3, 0 }, /* エ (D-A) */
-    { 4, 5 }, /* オ (E-F) */
-    { 5, 6 }, /* カ (F-G) */
-    { 6, 7 }, /* キ (G-H) */
-    { 7, 4 }, /* ク (H-E) */
-    { 0, 4 }, /* ケ (A-E) */
-    { 1, 5 }, /* コ (B-F) */
-    { 2, 6 }, /* サ (C-G) */
-    { 3, 7 }  /* シ (D-H) */
-};
-
-int face[][4] = {
-    { 0, 1, 2, 3 },
-    { 1, 5, 6, 2 },
-    { 5, 4, 7, 6 },
-    { 4, 0, 3, 7 },
-    { 4, 5, 1, 0 },
-    { 3, 2, 6, 7 }
-};
-
-GLdouble color[][3] = {
-    { 1.0, 0.0, 0.0 }, /* 赤 */
-    { 0.0, 1.0, 0.0 }, /* 緑 */
-    { 0.0, 0.0, 1.0 }, /* 青 */
-    { 1.0, 1.0, 0.0 }, /* 黄 */
-    { 1.0, 0.0, 1.0 }, /* マゼンタ */
-    { 0.0, 1.0, 1.0 }  /* シアン 　*/
-};
-
-GLdouble normal[][3] = {
-    { 0.0, 0.0,-1.0 },
-    { 1.0, 0.0, 0.0 },
-    { 0.0, 0.0, 1.0 },
-    {-1.0, 0.0, 0.0 },
-    { 0.0,-1.0, 0.0 },
-    { 0.0, 1.0, 0.0 }
-};
-
-GLfloat light0pos[] = { 0.0, 3.0, 5.0, 1.0 };
-GLfloat light1pos[] = { 5.0, 3.0, 0.0, 1.0 };
+#include "bubble.h"
 
 GLfloat red[] = { 0.8, 0.2, 0.2, 1.0 };
 GLfloat green[] = { 0.0, 1.0, 0.0, 1.0 };
+GLfloat aquablue[] = {66.0/255, 74.0/255, 118.0/255};
+GLfloat white[] = {1.0, 1.0, 1.0};
+int bubble_num;
 
-void cube(void)
-{
-    int i;
-    int j;
-    
-    glBegin(GL_QUADS);
-    for (j = 0; j < 6; ++j) {
-        glNormal3dv(normal[j]);
-        for (i = 0; i < 4; ++i) {
-            glVertex3dv(vertex[face[j][i]]);
-        }
-    }
-    glEnd();
-}
+Bubble bubbles[100];
 
-void sphere(void)
-{
-    int i;
-    int j;
-    glMaterialfv(GL_FRONT, GL_DIFFUSE, green);
-    glutSolidSphere(0.1,16,16);
-}
+GLfloat light0pos[] = { 100.0, 100.0, 100.0, 1 };
+GLfloat light1pos[] = { -100.0, -100.0, -100.0, 1 };
 
 void idle(void)
 {
@@ -90,47 +18,30 @@ void idle(void)
 
 void display(void)
 {
-    static int r = 0; /* 回転角 */
-    static float y = 0.0f;
-    static int sphere_length = 4;
-    
+    glEnable(GL_BLEND);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
+    glDepthMask(GL_FALSE);
+    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
     /* 光源の位置設定 */
     glLightfv(GL_LIGHT0, GL_POSITION, light0pos);
     glLightfv(GL_LIGHT1, GL_POSITION, light1pos);
     
-    /* モデルビュー変換行列の保存 */
-    glPushMatrix();
-    
-    /* 図形の回転 */
-    glRotated((double)r, 0.0, 1.0, 0.0);
-    
-    /* 図形の色 (赤)  */
-    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red);
-    
-    /* 図形の描画 */
-    cube();
-    for (int i=0; i<sphere_length; i++) {
-        glTranslated(0.0, y-0.1*i, 0.0);
-        sphere();
+    if(rand()%1000 < bubble_num){
+        int index = rand()%bubble_num;
+        bubbles[index].reset();
+    }
+    for(int i=0; i<sizeof(bubbles)/sizeof(bubbles[0]); i++){
+        bubbles[i].proceed()->draw();
+        std::printf("%f\n", bubbles[i].center[0]);
     }
     
-    /* 二つ目の図形の描画 */
-    glPushMatrix();
-    glTranslated(1.0, 1.0, 1.0);
-    glRotated((double)(2 * r), 0.0, 1.0, 0.0);
-    cube();
-    y+=0.01;
-    glPopMatrix();
+    glDisable(GL_BLEND);
+    glDepthMask(GL_TRUE);
     
-    /* モデルビュー変換行列の復帰 */
     glPopMatrix();
     
     glutSwapBuffers();
-    
-    /* 一周回ったら回転角を 0 に戻す */
-    if (++r >= 360) r = 0;
+    glutIdleFunc(idle);
 }
 
 void resize(int w, int h)
@@ -150,26 +61,6 @@ void resize(int w, int h)
 
 void mouse(int button, int state, int x, int y)
 {
-    switch (button) {
-        case GLUT_LEFT_BUTTON:
-            if (state == GLUT_DOWN) {
-                /* アニメーション開始 */
-                glutIdleFunc(idle);
-            }
-            else {
-                /* アニメーション停止 */
-                glutIdleFunc(0);
-            }
-            break;
-        case GLUT_RIGHT_BUTTON:
-            if (state == GLUT_DOWN) {
-                /* コマ送り (1ステップだけ進める) */
-                glutPostRedisplay();
-            }
-            break;
-        default:
-            break;
-    }
 }
 
 void keyboard(unsigned char key, int x, int y)
@@ -184,9 +75,9 @@ void keyboard(unsigned char key, int x, int y)
     }
 }
 
-void init(void)
+void init(GLfloat *color)
 {
-    glClearColor(1.0, 1.0, 1.0, 1.0);
+    glClearColor(color[0], color[1], color[2], 1.0);
     
     glEnable(GL_DEPTH_TEST);
     
@@ -196,8 +87,13 @@ void init(void)
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
     glEnable(GL_LIGHT1);
-    glLightfv(GL_LIGHT1, GL_DIFFUSE, green);
-    glLightfv(GL_LIGHT1, GL_SPECULAR, green);
+    glLightfv(GL_LIGHT1, GL_DIFFUSE, white);
+    glLightfv(GL_LIGHT1, GL_SPECULAR, white);
+    resize(1200,600);
+    bubble_num = sizeof(bubbles)/sizeof(bubbles[0]);
+    /*for(int i=0; i<bubble_num; i++){
+        bubbles[i] = Bubble();
+    }*/
 }
 
 int main(int argc, char *argv[])
@@ -209,7 +105,7 @@ int main(int argc, char *argv[])
     glutReshapeFunc(resize);
     glutMouseFunc(mouse);
     glutKeyboardFunc(keyboard);
-    init();
+    init(aquablue);
     glutMainLoop();
     return 0;
 }

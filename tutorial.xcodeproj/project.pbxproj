@@ -12,6 +12,9 @@
 		5F5265171AD252BF004DC4C8 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F5265141AD252BF004DC4C8 /* GLUT.framework */; };
 		5F5265181AD252BF004DC4C8 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F5265151AD252BF004DC4C8 /* OpenGL.framework */; };
 		5F52651A1AD252DB004DC4C8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F5265191AD252DB004DC4C8 /* Foundation.framework */; };
+		5FD267421B1B0D5800C012C5 /* gtest-framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FD267411B1B0D5800C012C5 /* gtest-framework */; };
+		5FD267451B1B0E6000C012C5 /* bubble.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FD267431B1B0E6000C012C5 /* bubble.cpp */; };
+		5FD267481B1B154F00C012C5 /* shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FD267461B1B154F00C012C5 /* shader.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -27,12 +30,19 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		5F36B1B01B19AE7100614C0C /* vert.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = vert.vert; sourceTree = "<group>"; };
+		5F36B1B11B19AE8700614C0C /* frag.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = frag.frag; sourceTree = "<group>"; };
 		5F5265091AD2527C004DC4C8 /* tutorial */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = tutorial; sourceTree = BUILT_PRODUCTS_DIR; };
 		5F52650C1AD2527C004DC4C8 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		5F5265131AD252BF004DC4C8 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		5F5265141AD252BF004DC4C8 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
 		5F5265151AD252BF004DC4C8 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		5F5265191AD252DB004DC4C8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		5FD267411B1B0D5800C012C5 /* gtest-framework */ = {isa = PBXFileReference; lastKnownFileType = text; name = "gtest-framework"; path = "../../../../../../../../Library/Frameworks/gtest-framework"; sourceTree = "<group>"; };
+		5FD267431B1B0E6000C012C5 /* bubble.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bubble.cpp; sourceTree = "<group>"; };
+		5FD267441B1B0E6000C012C5 /* bubble.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bubble.h; sourceTree = "<group>"; };
+		5FD267461B1B154F00C012C5 /* shader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = shader.cpp; sourceTree = "<group>"; };
+		5FD267471B1B154F00C012C5 /* shader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shader.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,6 +50,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5FD267421B1B0D5800C012C5 /* gtest-framework in Frameworks */,
 				5F52651A1AD252DB004DC4C8 /* Foundation.framework in Frameworks */,
 				5F5265161AD252BF004DC4C8 /* GLKit.framework in Frameworks */,
 				5F5265171AD252BF004DC4C8 /* GLUT.framework in Frameworks */,
@@ -53,6 +64,7 @@
 		5F5265001AD2527C004DC4C8 = {
 			isa = PBXGroup;
 			children = (
+				5FD267411B1B0D5800C012C5 /* gtest-framework */,
 				5F5265191AD252DB004DC4C8 /* Foundation.framework */,
 				5F5265131AD252BF004DC4C8 /* GLKit.framework */,
 				5F5265141AD252BF004DC4C8 /* GLUT.framework */,
@@ -74,6 +86,12 @@
 			isa = PBXGroup;
 			children = (
 				5F52650C1AD2527C004DC4C8 /* main.cpp */,
+				5FD267461B1B154F00C012C5 /* shader.cpp */,
+				5FD267471B1B154F00C012C5 /* shader.h */,
+				5F36B1B01B19AE7100614C0C /* vert.vert */,
+				5F36B1B11B19AE8700614C0C /* frag.frag */,
+				5FD267431B1B0E6000C012C5 /* bubble.cpp */,
+				5FD267441B1B0E6000C012C5 /* bubble.h */,
 			);
 			path = tutorial;
 			sourceTree = "<group>";
@@ -134,7 +152,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5FD267481B1B154F00C012C5 /* shader.cpp in Sources */,
 				5F52650D1AD2527C004DC4C8 /* main.cpp in Sources */,
+				5FD267451B1B0E6000C012C5 /* bubble.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -223,11 +243,9 @@
 					"/usr/local/Cellar/ode-drawstuff/0.13/include",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 				);
-				LIBRARY_SEARCH_PATHS = "/usr/local/Cellar/ode-drawstuff/0.13/lib";
+				LIBRARY_SEARCH_PATHS = "";
 				OTHER_LDFLAGS = (
 					"-lm",
-					"-lode",
-					"-ldrawstuff",
 					"-framework",
 					OpenGL,
 					"-framework",
@@ -247,11 +265,9 @@
 					"/usr/local/Cellar/ode-drawstuff/0.13/include",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 				);
-				LIBRARY_SEARCH_PATHS = "/usr/local/Cellar/ode-drawstuff/0.13/lib";
+				LIBRARY_SEARCH_PATHS = "";
 				OTHER_LDFLAGS = (
 					"-lm",
-					"-lode",
-					"-ldrawstuff",
 					"-framework",
 					OpenGL,
 					"-framework",
