@@ -1,5 +1,14 @@
 #include "bubble.h"
 
+/*
+ ** シェーダオブジェクト
+ */
+static GLuint vertShader;
+static GLuint fragShader;
+static GLuint gl2Program;
+
+GLint compiled, linked;
+
 GLfloat red[] = { 0.8, 0.2, 0.2, 1.0 };
 GLfloat green[] = { 0.0, 1.0, 0.0, 1.0 };
 GLfloat aquablue[] = {66.0/255, 74.0/255, 118.0/255};
@@ -30,6 +39,8 @@ void display(void)
         int index = rand()%bubble_num;
         bubbles[index].reset();
     }
+    
+    glUseProgram(gl2Program);
     for(int i=0; i<sizeof(bubbles)/sizeof(bubbles[0]); i++){
         bubbles[i].proceed()->draw();
         std::printf("%f\n", bubbles[i].center[0]);
@@ -94,6 +105,53 @@ void init(GLfloat *color)
     /*for(int i=0; i<bubble_num; i++){
         bubbles[i] = Bubble();
     }*/
+    
+    vertShader = glCreateShader(GL_VERTEX_SHADER);
+    fragShader = glCreateShader(GL_FRAGMENT_SHADER);
+    
+    /* シェーダのソースプログラムの読み込み */
+    if (readShaderSource(vertShader, "/Users/yasudayousuke/Documents/study/lecture/7sem/cg/tutorial/tutorial/vert.vert")) exit(1);
+    if (readShaderSource(fragShader, "/Users/yasudayousuke/Documents/study/lecture/7sem/cg/tutorial/tutorial/frag.frag")) exit(1);
+    
+    /* バーテックスシェーダのソースプログラムのコンパイル */
+    glCompileShader(vertShader);
+    glGetShaderiv(vertShader, GL_COMPILE_STATUS, &compiled);
+    printShaderInfoLog(vertShader);
+    if (compiled == GL_FALSE) {
+        fprintf(stderr, "Compile error in vertex shader.\n");
+        exit(1);
+    }
+    
+    /* フラグメントシェーダのソースプログラムのコンパイル */
+    glCompileShader(fragShader);
+    glGetShaderiv(fragShader, GL_COMPILE_STATUS, &compiled);
+    printShaderInfoLog(fragShader);
+    if (compiled == GL_FALSE) {
+        fprintf(stderr, "Compile error in fragment shader.\n");
+        exit(1);
+    }
+    
+    /* プログラムオブジェクトの作成 */
+    gl2Program = glCreateProgram();
+    
+    /* シェーダオブジェクトのシェーダプログラムへの登録 */
+    glAttachShader(gl2Program, vertShader);
+    glAttachShader(gl2Program, fragShader);
+    
+    /* シェーダオブジェクトの削除 */
+    glDeleteShader(vertShader);
+    glDeleteShader(fragShader);
+    
+    /* attribute 変数 position の index を 0 に指定する */
+    glBindAttribLocation(gl2Program, 0, "position");
+    /* シェーダプログラムのリンク */
+    glLinkProgram(gl2Program);
+    glGetProgramiv(gl2Program, GL_LINK_STATUS, &linked);
+    printProgramInfoLog(gl2Program);
+    if (linked == GL_FALSE) {
+        fprintf(stderr, "Link error.\n");
+        exit(1);
+    }
 }
 
 int main(int argc, char *argv[])

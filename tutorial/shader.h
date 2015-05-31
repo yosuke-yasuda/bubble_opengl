@@ -28,5 +28,8 @@
 #endif
 
 void setShaders();
+int readShaderSource(GLuint shader, const char *file);
+void printShaderInfoLog(GLuint shader);
+void printProgramInfoLog(GLuint program);
 
 #endif /* defined(__tutorial__shader__) */
