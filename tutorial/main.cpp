@@ -65,7 +65,7 @@ void LoadBackTexture(){
     
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     cv::Mat imgA;
-    imgA = cv::imread("image/front.jpg",CV_LOAD_IMAGE_ANYDEPTH | CV_LOAD_IMAGE_ANYCOLOR);
+    imgA = cv::imread("image/wall.jpg",CV_LOAD_IMAGE_ANYDEPTH | CV_LOAD_IMAGE_ANYCOLOR);
     if(imgA.empty())
     {
         std::cerr << "image/inverse.jpg" << " : Can't Load Image\n";
@@ -94,7 +94,7 @@ int bubble_num;
 
 Bubble bubbles[100];
 
-GLfloat light0pos[] = { 0.0, 10, -10.0, 0.5 };
+GLfloat light0pos[] = { 0.0, 10, 0.0, 1.0 };
 
 void idle(void)
 {
@@ -109,8 +109,8 @@ void display(void)
     glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
     /* 光源の位置設定 */
     glLightfv(GL_LIGHT0, GL_POSITION, light0pos);
-    static GLfloat ambient [] = { aquablue[0], aquablue[1], aquablue[2], 0.5f};
-    static GLfloat specular[] = { 0.5f, 0.5f, 0.5f, 1.0f};
+    static GLfloat ambient [] = { aquablue[0], aquablue[1], aquablue[2], 0.1f};
+    static GLfloat specular[] = { 1.0f, 1.0f, 1.0f, 1.0f};
     static GLfloat diffuse [] = { 1.0f, 1.0f, 1.0f, 1.0f};
     glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
     glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
@@ -121,7 +121,7 @@ void display(void)
     }
     
     /* 材質の設定 */
-    static const GLfloat ambient_color[] = { 1.0, 1.0, 1.0, 0.5 };  /* 材質 (色) */
+    static const GLfloat ambient_color[] = { 1.0, 1.0, 1.0, 1.0 };  /* 材質 (色) */
     static const GLfloat diffuse_color[] = { 1.0, 1.0, 1.0, 1.0};  /* 材質 (色) */
     static const GLfloat specular_color[] = { 1.0, 1.0, 1.0, 1.0 };  /* 材質 (色) */
     glMaterialfv(GL_FRONT, GL_AMBIENT, ambient_color);
