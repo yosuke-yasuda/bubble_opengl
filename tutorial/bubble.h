@@ -15,9 +15,9 @@
 class Bubble{
 public:
     GLfloat center[3];
-    GLfloat color[4];
-    GLfloat ambient_color[4] = {1.0, 1.0, 1.0, 0.8};
-    GLfloat specular_color[4] = {1.0, 1.0, 1.0, 0.8};
+    GLfloat difuse_color[4] = {1.0, 1.0, 1.0, 1.0};
+    GLfloat ambient_color[4] = {1.0, 1.0, 1.0, 1.0};
+    GLfloat specular_color[4] = {0.5, 0.5, 0.5, 1.0};
     GLfloat shiness[1] = {100.0};
     GLfloat velocity[3];
     GLfloat dt = 0.001;

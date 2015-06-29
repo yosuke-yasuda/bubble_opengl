@@ -12,6 +12,8 @@
 		5F5265171AD252BF004DC4C8 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F5265141AD252BF004DC4C8 /* GLUT.framework */; };
 		5F5265181AD252BF004DC4C8 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F5265151AD252BF004DC4C8 /* OpenGL.framework */; };
 		5F52651A1AD252DB004DC4C8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F5265191AD252DB004DC4C8 /* Foundation.framework */; };
+		5F59B3521B2FE9AD00411E29 /* libopencv_highgui.2.4.11.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F59B3511B2FE9AD00411E29 /* libopencv_highgui.2.4.11.dylib */; };
+		5F59B3541B2FE9E000411E29 /* libopencv_core.2.4.11.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F59B3531B2FE9E000411E29 /* libopencv_core.2.4.11.dylib */; };
 		5FD267421B1B0D5800C012C5 /* gtest-framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FD267411B1B0D5800C012C5 /* gtest-framework */; };
 		5FD267451B1B0E6000C012C5 /* bubble.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FD267431B1B0E6000C012C5 /* bubble.cpp */; };
 		5FD267481B1B154F00C012C5 /* shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FD267461B1B154F00C012C5 /* shader.cpp */; };
@@ -38,6 +40,10 @@
 		5F5265141AD252BF004DC4C8 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
 		5F5265151AD252BF004DC4C8 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		5F5265191AD252DB004DC4C8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		5F59B3511B2FE9AD00411E29 /* libopencv_highgui.2.4.11.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_highgui.2.4.11.dylib; path = ../../../../../../../../usr/local/Cellar/opencv/2.4.11_1/lib/libopencv_highgui.2.4.11.dylib; sourceTree = "<group>"; };
+		5F59B3531B2FE9E000411E29 /* libopencv_core.2.4.11.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_core.2.4.11.dylib; path = ../../../../../../../../usr/local/Cellar/opencv/2.4.11_1/lib/libopencv_core.2.4.11.dylib; sourceTree = "<group>"; };
+		5F59B3551B2FEA7000411E29 /* image */ = {isa = PBXFileReference; lastKnownFileType = folder; path = image; sourceTree = "<group>"; };
+		5F59B3561B2FEA8800411E29 /* top.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = top.jpg; path = tutorial/image/top.jpg; sourceTree = "<group>"; };
 		5FD267411B1B0D5800C012C5 /* gtest-framework */ = {isa = PBXFileReference; lastKnownFileType = text; name = "gtest-framework"; path = "../../../../../../../../Library/Frameworks/gtest-framework"; sourceTree = "<group>"; };
 		5FD267431B1B0E6000C012C5 /* bubble.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bubble.cpp; sourceTree = "<group>"; };
 		5FD267441B1B0E6000C012C5 /* bubble.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bubble.h; sourceTree = "<group>"; };
@@ -54,6 +60,8 @@
 				5F52651A1AD252DB004DC4C8 /* Foundation.framework in Frameworks */,
 				5F5265161AD252BF004DC4C8 /* GLKit.framework in Frameworks */,
 				5F5265171AD252BF004DC4C8 /* GLUT.framework in Frameworks */,
+				5F59B3541B2FE9E000411E29 /* libopencv_core.2.4.11.dylib in Frameworks */,
+				5F59B3521B2FE9AD00411E29 /* libopencv_highgui.2.4.11.dylib in Frameworks */,
 				5F5265181AD252BF004DC4C8 /* OpenGL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -64,6 +72,8 @@
 		5F5265001AD2527C004DC4C8 = {
 			isa = PBXGroup;
 			children = (
+				5F59B3531B2FE9E000411E29 /* libopencv_core.2.4.11.dylib */,
+				5F59B3511B2FE9AD00411E29 /* libopencv_highgui.2.4.11.dylib */,
 				5FD267411B1B0D5800C012C5 /* gtest-framework */,
 				5F5265191AD252DB004DC4C8 /* Foundation.framework */,
 				5F5265131AD252BF004DC4C8 /* GLKit.framework */,
@@ -71,6 +81,7 @@
 				5F5265151AD252BF004DC4C8 /* OpenGL.framework */,
 				5F52650B1AD2527C004DC4C8 /* tutorial */,
 				5F52650A1AD2527C004DC4C8 /* Products */,
+				5F59B3561B2FEA8800411E29 /* top.jpg */,
 			);
 			sourceTree = "<group>";
 		};
@@ -85,6 +96,7 @@
 		5F52650B1AD2527C004DC4C8 /* tutorial */ = {
 			isa = PBXGroup;
 			children = (
+				5F59B3551B2FEA7000411E29 /* image */,
 				5F52650C1AD2527C004DC4C8 /* main.cpp */,
 				5FD267461B1B154F00C012C5 /* shader.cpp */,
 				5FD267471B1B154F00C012C5 /* shader.h */,
@@ -242,8 +254,10 @@
 					"$(inherited)",
 					"/usr/local/Cellar/ode-drawstuff/0.13/include",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					/usr/local/Cellar/opencv/2.4.11_1/include,
+					/usr/local/Cellar/opencv/2.4.11_1/lib,
 				);
-				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = /usr/local/Cellar/opencv/2.4.11_1/lib;
 				OTHER_LDFLAGS = (
 					"-lm",
 					"-framework",
@@ -265,7 +279,7 @@
 					"/usr/local/Cellar/ode-drawstuff/0.13/include",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 				);
-				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = /usr/local/Cellar/opencv/2.4.11_1/lib;
 				OTHER_LDFLAGS = (
 					"-lm",
 					"-framework",

@@ -7,6 +7,7 @@
 //
 
 #include "shader.h"
+#include "iostream"
 
 GLuint v, f, p;
 
@@ -122,18 +123,18 @@ void setShaders() {
     
     const char * vv = &vs;
     const char * ff = &fs;
-    
+    //std::cout<<"check shader0"<<std::endl;
     glShaderSource(v, 1, &vv,NULL);
     glShaderSource(f, 1, &ff,NULL);
-    
+    //std::cout<<"check shader"<<std::endl;
     glCompileShader(v);
     glCompileShader(f);
-    
+    //std::cout<<"check shader1"<<std::endl;
     p = glCreateProgram();
     
     glAttachShader(p,v);
     glAttachShader(p,f);
-    
+    //std::cout<<"check shader2"<<std::endl;
     glLinkProgram(p);
     glUseProgram(p);
 }

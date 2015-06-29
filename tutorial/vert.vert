@@ -1,8 +1,16 @@
-#version 120
-invariant gl_Position;
-attribute vec2 position;
+// vertex shader of bump & cube environment mapping
+
+attribute vec3 tangent;
+
+/* 視点座標系 */
+varying vec4 position;
+varying vec3 normal;
 
 void main(void)
 {
-    gl_Position = vec4(position, 0.0, 1.0);
+    position = gl_ModelViewMatrix * gl_Vertex;
+    normal = normalize(gl_NormalMatrix * gl_Normal);
+    
+    gl_TexCoord[0] = gl_TextureMatrix[0] * gl_MultiTexCoord0;
+    gl_Position = ftransform();
 }

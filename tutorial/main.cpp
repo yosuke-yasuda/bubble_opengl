@@ -1,4 +1,6 @@
 #include "bubble.h"
+#include <opencv2/opencv.hpp>
+#include <opencv2/highgui/highgui.hpp>
 
 /*
  ** シェーダオブジェクト
@@ -6,6 +8,81 @@
 static GLuint vertShader;
 static GLuint fragShader;
 static GLuint gl2Program;
+
+const char *filename[]={"image/inverse.jpg","image/inverse.jpg","image/bottom.jpg","image/top.jpg","image/inverse.jpg","image/inverse.jpg"};
+
+unsigned int cubefaces[6] = {
+    GL_TEXTURE_CUBE_MAP_POSITIVE_X,
+    GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
+    GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
+    GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
+    GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
+    GL_TEXTURE_CUBE_MAP_NEGATIVE_Z,
+};
+
+unsigned int texId;
+
+void LoadTexture()
+{
+    //6枚を１つのテクスチャとして扱ってくれる
+    glGenTextures( 1, &texId );
+    glBindTexture( GL_TEXTURE_CUBE_MAP, texId );
+    
+    //フィルタ設定
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    
+    glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
+    glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
+    glTexGeni(GL_R, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);//下地の色にマッピング
+    
+    
+    cv::Mat imgA;//OpenCVの新しいC++インターフェイス
+    for(int loop = 0;loop < 6;++loop)
+    {
+        imgA = cv::imread(filename[loop],CV_LOAD_IMAGE_ANYDEPTH | CV_LOAD_IMAGE_ANYCOLOR);
+        if(imgA.empty())
+        {
+            std::cerr << filename[loop] << " : Can't Load Image\n";
+            exit(EXIT_FAILURE);
+        }
+        
+        
+        glTexImage2D(cubefaces[loop],0,GL_RGB8,imgA.cols,imgA.rows, 0,GL_BGR,GL_UNSIGNED_BYTE,imgA.data);
+        std::cout <<  filename[loop] << " : Loaded .\n";
+
+        imgA.release();
+    }
+    
+}
+
+unsigned int backTexId;
+
+void LoadBackTexture(){
+    glGenTextures( 1, &backTexId );
+    glBindTexture( GL_TEXTURE_2D, backTexId );
+    
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    cv::Mat imgA;
+    imgA = cv::imread("image/front.jpg",CV_LOAD_IMAGE_ANYDEPTH | CV_LOAD_IMAGE_ANYCOLOR);
+    if(imgA.empty())
+    {
+        std::cerr << "image/inverse.jpg" << " : Can't Load Image\n";
+        exit(EXIT_FAILURE);
+    }
+    glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB8,imgA.cols,imgA.rows, 0,GL_BGR,GL_UNSIGNED_BYTE,imgA.data);
+    //gluBuild2DMipmaps(GL_TEXTURE_2D, 3, 28, 28, GL_RGB, GL_UNSIGNED_BYTE, imgA.data);
+    std::cout <<  "back texture" << " : Loaded .\n";
+    
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    
+    imgA.release();
+}
+
 
 GLint compiled, linked;
 
@@ -17,8 +94,7 @@ int bubble_num;
 
 Bubble bubbles[100];
 
-GLfloat light0pos[] = { 100.0, 100.0, 100.0, 1 };
-GLfloat light1pos[] = { -100.0, -100.0, -100.0, 1 };
+GLfloat light0pos[] = { 0.0, 10, -10.0, 0.5 };
 
 void idle(void)
 {
@@ -33,21 +109,79 @@ void display(void)
     glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
     /* 光源の位置設定 */
     glLightfv(GL_LIGHT0, GL_POSITION, light0pos);
-    glLightfv(GL_LIGHT1, GL_POSITION, light1pos);
-    
+    static GLfloat ambient [] = { aquablue[0], aquablue[1], aquablue[2], 0.5f};
+    static GLfloat specular[] = { 0.5f, 0.5f, 0.5f, 1.0f};
+    static GLfloat diffuse [] = { 1.0f, 1.0f, 1.0f, 1.0f};
+    glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
     if(rand()%1000 < bubble_num){
         int index = rand()%bubble_num;
         bubbles[index].reset();
     }
     
-    glUseProgram(gl2Program);
-    for(int i=0; i<sizeof(bubbles)/sizeof(bubbles[0]); i++){
-        bubbles[i].proceed()->draw();
-        std::printf("%f\n", bubbles[i].center[0]);
-    }
+    /* 材質の設定 */
+    static const GLfloat ambient_color[] = { 1.0, 1.0, 1.0, 0.5 };  /* 材質 (色) */
+    static const GLfloat diffuse_color[] = { 1.0, 1.0, 1.0, 1.0};  /* 材質 (色) */
+    static const GLfloat specular_color[] = { 1.0, 1.0, 1.0, 1.0 };  /* 材質 (色) */
+    glMaterialfv(GL_FRONT, GL_AMBIENT, ambient_color);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse_color);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, specular_color);
+    //glActiveTexture(GL_TEXTURE1);
+    glEnable(GL_TEXTURE);
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, backTexId);
+    /*glEnable(GL_TEXTURE_GEN_S);
+    glEnable(GL_TEXTURE_GEN_T);
+    glEnable(GL_TEXTURE_GEN_R);
+    glEnable(GL_TEXTURE_GEN_Q);*/
+    /* １枚の４角形を描く */
+    //glNormal3d(0.0, 0.0, -10.0);
+    glBegin(GL_QUADS);
+    /*glTexCoord2d(0.0, 1.0);
+     glVertex3d(-1000.0, -1000.0,  -200.0);
+     glTexCoord2d(1.0, 1.0);
+     glVertex3d( 1000.0, -1000.0,  -200.0);
+     glTexCoord2d(1.0, 0.0);
+     glVertex3d( 1000.0,  1000.0,  -200.0);
+     glTexCoord2d(0.0, 0.0);
+     glVertex3d(-1000.0,  1000.0,  -200.0);*/
+    glTexCoord2d(1.0, 1.0);
+    glVertex3d(-15.0, -10.0,  -30.0);
+    glTexCoord2d(1.0, 0.0);
+    
+    glVertex3d(-15.0,  10.0,  -30.0);
+    glTexCoord2d(0.0, 0.0);
+    glVertex3d( 15.0,  10.0,  -30.0);
+    glTexCoord2d(0.0, 1.0);
+    glVertex3d( 15.0, -10.0,  -30.0);
+    glEnd();
+    /*glDisable(GL_TEXTURE_GEN_S);
+    glDisable(GL_TEXTURE_GEN_T);
+    glDisable(GL_TEXTURE_GEN_R);
+    glDisable(GL_TEXTURE_GEN_Q);*/
+    /* テクスチャマッピング終了 */
+    glDisable(GL_TEXTURE_2D);
     
     glDisable(GL_BLEND);
     glDepthMask(GL_TRUE);
+    
+    //glUseProgram(gl2Program);
+    glActiveTexture(GL_TEXTURE0);
+    glEnable( GL_TEXTURE_GEN_S );
+    glEnable( GL_TEXTURE_GEN_T );
+    glEnable( GL_TEXTURE_GEN_R );
+    glEnable( GL_TEXTURE_CUBE_MAP );
+    glBindTexture(GL_TEXTURE_CUBE_MAP, texId);
+    for(int i=0; i<sizeof(bubbles)/sizeof(bubbles[0]); i++){
+        bubbles[i].proceed()->draw();
+    }
+    glDisable( GL_TEXTURE_GEN_S );
+    glDisable( GL_TEXTURE_GEN_T );
+    glDisable( GL_TEXTURE_GEN_R );
+    glDisable( GL_TEXTURE_CUBE_MAP );
+    
+    glUseProgram(0);
     
     glPopMatrix();
     
@@ -67,7 +201,7 @@ void resize(int w, int h)
     /* モデルビュー変換行列の設定 */
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    gluLookAt(3.0, 4.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+    gluLookAt(0.0, 0.0, 0.0, 0.0, 0.0, -1.0, 0.0, 1.0, 0.0);
 }
 
 void mouse(int button, int state, int x, int y)
@@ -98,9 +232,11 @@ void init(GLfloat *color)
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
     glEnable(GL_LIGHT1);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, white);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, white);
     glLightfv(GL_LIGHT1, GL_DIFFUSE, white);
     glLightfv(GL_LIGHT1, GL_SPECULAR, white);
-    resize(1200,600);
+    resize(640,400);
     bubble_num = sizeof(bubbles)/sizeof(bubbles[0]);
     /*for(int i=0; i<bubble_num; i++){
         bubbles[i] = Bubble();
@@ -156,6 +292,7 @@ void init(GLfloat *color)
 
 int main(int argc, char *argv[])
 {
+    glutInitWindowSize(1200, 960);
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
     glutCreateWindow(argv[0]);
@@ -163,6 +300,8 @@ int main(int argc, char *argv[])
     glutReshapeFunc(resize);
     glutMouseFunc(mouse);
     glutKeyboardFunc(keyboard);
+    LoadTexture();
+    LoadBackTexture();
     init(aquablue);
     glutMainLoop();
     return 0;

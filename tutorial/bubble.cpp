@@ -7,22 +7,20 @@
 //
 
 #include "bubble.h"
+#include <iostream>
 
+using namespace std;
 Bubble::Bubble(){
     Bubble::set_params();
 }
 void Bubble::set_params(){
     center[0] = ((rand()%101)-50)/10.0;
-    center[1] = 0.0;
-    center[2] = ((rand()%101)-50)/10.0;
-    color[0] = 1.0;
-    color[1] = 1.0;
-    color[2] = 1.0;
-    color[3] = 0.6;
+    center[1] = ((rand()%101)-50)/10.0;
+    center[2] = ((rand()%51)-50)/10.0;
     velocity[0] = 0.0;
     velocity[1] = 10.0;
     velocity[2] = 0.0;
-    size = 0.001;
+    size = 0.005;
 }
 Bubble* Bubble::proceed(){
     int rand_digit = 1001;
@@ -35,16 +33,15 @@ Bubble* Bubble::proceed(){
     return this;
 }
 Bubble* Bubble::draw(){
-    setShaders();
-    glMaterialfv(GL_FRONT, GL_DIFFUSE, color);
+    //glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+    glMatrixMode(GL_PROJECTION);
+    glMatrixMode(GL_MODELVIEW);
+    
+    glPushMatrix();
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, difuse_color);
     glMaterialfv(GL_FRONT, GL_AMBIENT, ambient_color);
     glMaterialfv(GL_FRONT, GL_SPECULAR, specular_color);
     glMaterialfv(GL_FRONT, GL_SHININESS, shiness);
-    glEnable(GL_FOG);
-    float FogColor[]={0.8f,0.8,0.8,0.8f};
-    glFogfv(GL_FOG_COLOR , FogColor );
-    //glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
-    glPushMatrix();
     glTranslatef(this->center[0], this->center[1], this->center[2]);
     //glColor4f(1.0, 1.0, 1.0, 0.2);
     glutSolidSphere(this->size, 16, 16);
