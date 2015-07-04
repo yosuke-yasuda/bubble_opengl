@@ -24,7 +24,11 @@ void Bubble::set_params(){
 }
 Bubble* Bubble::proceed(){
     int rand_digit = 1001;
+    if(this->center[1] > 10){
+        this->reset();
+    }
     this->velocity[0] += ((rand_digit-1)/2.0-(rand()%rand_digit))/m/1000.0;
+    this->velocity[1] += this->size*this->size*this->size*1000;
     this->velocity[2] += ((rand_digit-1)/2.0-(rand()%rand_digit))/m/1000.0;
     this->center[0] += velocity[0] * dt;
     this->center[1] += velocity[1] * dt;
