@@ -115,10 +115,6 @@ void display(void)
     glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
     glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
-    if(rand()%1000 < bubble_num){
-        int index = rand()%bubble_num;
-        bubbles[index].reset();
-    }
     
     /* 材質の設定 */
     static const GLfloat ambient_color[] = { 1.0, 1.0, 1.0, 1.0 };  /* 材質 (色) */
