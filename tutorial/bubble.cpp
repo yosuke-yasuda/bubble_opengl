@@ -16,24 +16,24 @@ Bubble::Bubble(){
 void Bubble::set_params(){
     center[0] = ((rand()%101)-50)/10.0;
     center[1] = ((rand()%101)-50)/10.0;
-    center[2] = ((rand()%51)-50)/10.0;
+    center[2] = (-30-(rand()%51))/10.0;
+    size = (rand()%5+10)/1000.0;
     velocity[0] = 0.0;
-    velocity[1] = 10.0;
+    velocity[1] = this->size*this->size*this->size*this->size*2000000000;
     velocity[2] = 0.0;
-    size = 0.005;
 }
 Bubble* Bubble::proceed(){
     int rand_digit = 1001;
-    if(this->center[1] > 10){
+    if(this->center[1] > 2){
         this->reset();
     }
     this->velocity[0] += ((rand_digit-1)/2.0-(rand()%rand_digit))/m/1000.0;
-    this->velocity[1] += this->size*this->size*this->size*1000;
+    this->velocity[1] += this->size*this->size*this->size*50;
     this->velocity[2] += ((rand_digit-1)/2.0-(rand()%rand_digit))/m/1000.0;
     this->center[0] += velocity[0] * dt;
     this->center[1] += velocity[1] * dt;
     this->center[2] += velocity[2] * dt;
-    this->size += 0.0001;
+    this->size += this->size * this->size * this->size * this->size * this->velocity[1] * 0.001;
     return this;
 }
 Bubble* Bubble::draw(){

@@ -92,7 +92,7 @@ GLfloat aquablue[] = {66.0/255, 74.0/255, 118.0/255};
 GLfloat white[] = {1.0, 1.0, 1.0};
 int bubble_num;
 
-Bubble bubbles[100];
+Bubble bubbles[3000];
 
 GLfloat light0pos[] = { 0.0, 10, 0.0, 1.0 };
 
