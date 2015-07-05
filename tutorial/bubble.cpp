@@ -28,7 +28,7 @@ Bubble* Bubble::proceed(){
         this->reset();
     }
     this->velocity[0] += ((rand_digit-1)/2.0-(rand()%rand_digit))/m/1000.0;
-    this->velocity[1] += this->size*this->size*this->size*50;
+    this->velocity[1] += this->size*this->size*this->size*50 + ((rand_digit-1)/2.0-(rand()%rand_digit))/m/1000.0;
     this->velocity[2] += ((rand_digit-1)/2.0-(rand()%rand_digit))/m/1000.0;
     this->center[0] += velocity[0] * dt;
     this->center[1] += velocity[1] * dt;
